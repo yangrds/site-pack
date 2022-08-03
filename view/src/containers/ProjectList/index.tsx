@@ -82,7 +82,7 @@ const View: React.FC = (props: any) => {
             key: 'ip',
             width: '150px',
             render: (_, { port }) => (
-                <a target="_blank" href={'http://127.0.0.1:' + port}>{'127.0.0.1:' + port}</a>
+                <a target="_blank" href={`http://${window.location.hostname}:` + port}>{window.location.hostname + ':' + port}</a>
             ),
         },
         {
@@ -189,19 +189,7 @@ const View: React.FC = (props: any) => {
     }
 
 
-    // function complete(loadingText: string) {
-    //     const time1 = setTimeout(() => {
-    //         props.loading_status('success')
-    //         props.loading_text(loadingText)
-    //         clearTimeout(time1)
-    //     }, 300);
 
-    //     const time2 = setTimeout(() => {
-    //         props.loading_visible(false)
-    //         _project_list()
-    //         clearTimeout(time2)
-    //     }, 800);
-    // }
 
     function complete({ text, time = 800, err, callback }: Complete) {
         const time1 = setTimeout(() => {
@@ -223,8 +211,8 @@ const View: React.FC = (props: any) => {
         props.loading_visible(true)
         const res = await process_start({ id: key })
         if (res.code === 200) {
-            complete({text:`【${key}】进程启动成功`,callback:_project_list})
-        }else{
+            complete({ text: `【${key}】进程启动成功`, callback: _project_list })
+        } else {
             complete({ text: `${res.msg}`, err: true, time: 2000 })
         }
     }
@@ -234,8 +222,8 @@ const View: React.FC = (props: any) => {
         props.loading_visible(true)
         const res = await process_init()
         if (res.code === 200) {
-            complete({text:'进程池重启成功',callback:_project_list})
-        }else{
+            complete({ text: '进程池重启成功', callback: _project_list })
+        } else {
             complete({ text: `${res.msg}`, err: true, time: 2000 })
         }
     }
@@ -245,8 +233,8 @@ const View: React.FC = (props: any) => {
         props.loading_visible(true)
         const res = await process_kill_all()
         if (res.code === 200) {
-            complete({text:'进程池冻结成功',callback:_project_list})
-        }else{
+            complete({ text: '进程池冻结成功', callback: _project_list })
+        } else {
             complete({ text: `${res.msg}`, err: true, time: 2000 })
         }
     }
@@ -256,8 +244,8 @@ const View: React.FC = (props: any) => {
         props.loading_visible(true)
         const res = await process_kill({ id: key })
         if (res.code === 200) {
-            complete({text:`【${key}】进程关闭成功`,callback:_project_list})
-        }else{
+            complete({ text: `【${key}】进程关闭成功`, callback: _project_list })
+        } else {
             complete({ text: `${res.msg}`, err: true, time: 2000 })
         }
 

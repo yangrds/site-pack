@@ -8,6 +8,11 @@ import routes from './router';
 
 function App() {
 
+
+
+  console.log(window.location);
+  
+
   const navigate = useNavigate()
 
 

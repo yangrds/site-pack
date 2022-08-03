@@ -1,6 +1,6 @@
 
 import { post, get } from './http'
-const address = 'http://127.0.0.1:7001'
+const address = `http://${window.location.hostname}:9871`
 /* 站点创建 */
 export const project_create = (body?: any): any => post({ url: `${address}/project/create`, body })
 export const project_list = (body?: any): any => post({ url: `${address}/project/list`, body })

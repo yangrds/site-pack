@@ -217,7 +217,7 @@ const View: React.FC = (props: any) => {
                 </Descriptions.Item>
                 <Descriptions.Item label="创建时间" >{details.date}</Descriptions.Item>
                 <Descriptions.Item label="访问地址" span={2}>
-                    <a target="_blank" href={'http://127.0.0.1:' + details.port}>{'127.0.0.1:' + details.port}</a>
+                    <a target="_blank" href={`http://${window.location.hostname}:` + details.port}>{window.location.hostname + ':' + details.port}</a>
                 </Descriptions.Item>
 
                 <Descriptions.Item label="备注" >

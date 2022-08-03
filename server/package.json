@@ -18,7 +18,16 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "win": "pkg . -t node16-win-x64",
+    "lux": "pkg . -t node16-linux-x64",
+    "mac": "pkg . -t node14-macos-x64"
+  },
+  "bin": "./dist/main.js",
+  "pkg": {
+    "assets": [
+      "public"
+    ]
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
@@ -27,7 +36,6 @@
     "compressing": "^1.6.2",
     "fs-extra": "^10.1.0",
     "got": "11.8.2",
-    "nanoid": "^4.0.0",
     "node-rsa": "^1.1.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",

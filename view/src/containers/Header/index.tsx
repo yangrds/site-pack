@@ -172,7 +172,7 @@ const View: React.FC = (props: any) => {
                     </div>
                     <div className={style['header-options']}>
 
-                        <a href="https://js-vue.com/archives/package-ci" target="_blank" className={style['options-child']}>
+                        <a href="https://js-vue.com/" target="_blank" className={style['options-child']}>
                             <img src={blog} />
                             <span>博客文档</span>
                         </a>

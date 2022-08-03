@@ -176,7 +176,7 @@ export class ProjectService {
 
     async process_start(body: { id: string }) {
         const process = process_container.find((item) => item.project_id === body.id)
-        if (!process) return { code: 500, msg: '未知错误，请重试或者联系管理员。' }
+        if (!process) return { code: 500, msg: '进程池匹配失败，请刷新进程池后操作。' }
         // 启动进程之前先检测心跳状态
         const before = await ServerStatus(process.env.port)
         /* 
