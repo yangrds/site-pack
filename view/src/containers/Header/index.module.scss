@@ -1,0 +1,212 @@
+.container{
+    width: 100%;
+    height: 50px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    background-color:#fff;
+    >.header-info {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid rgba($color: #888, $alpha: .1);
+
+        >.login-title {
+            width: 126px;
+            height: 36px;
+            padding-left: 10px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 800;
+            box-shadow: 0px 0px 3px rgba($color: #333, $alpha: .3) inset;
+            user-select: none;
+
+            >img {
+                width: 20px;
+                height: 20px;
+                margin-right: 5px;
+            }
+
+            span {
+                color: #888;
+            }
+        }
+
+        >.header-options {
+            width: 800px;
+            height: 50px;
+            position: absolute;
+            top: 0;
+            right: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+
+            >.options-child {
+                width: 60px;
+                height: 46px;
+                margin-right: 10px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                border-radius: 5px;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: rgba($color: #5468ff, $alpha: 0.1);
+                }
+
+                span {
+                    font-size: 12px;
+                    color: #888;
+                    transform: scale(.9);
+
+                }
+
+                img {
+                    width: 20px;
+                    height: 20px;
+                }
+            }
+
+            >.personal {
+                min-width: 130px;
+                max-width: 230px;
+                padding: 0 10px;
+                margin-left: 5px;
+                cursor: pointer;
+                height: 50px;
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+
+                &:hover {
+                    background-color: rgba($color: #5468ff, $alpha: 0.1);
+                }
+
+                >span {
+                    font-size: 14px;
+                    color: #555;
+                }
+
+                >img {
+                    width: 30px;
+                    height: 30px;
+                    margin-right: 10px;
+                }
+
+                >.user-info {
+                    width: auto;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    /* 隐藏超出部分 */
+                    overflow: hidden;
+                    >span:nth-child(1) {
+                        font-size: 15px;
+                        color: #333;
+                    }
+
+                    >span:nth-child(2) {
+                        font-size: 12px;
+                        color: #888;
+                        margin-bottom: 3px;
+                    }
+
+                    >span {
+                        /* 不换行 */
+                        white-space: nowrap;
+                        /* 隐藏超出部分 */
+                        overflow: hidden;
+                        /* 显示省略号 */
+                        text-overflow: ellipsis;
+                    }
+                }
+
+            }
+
+            >img {
+                width: 36px;
+                height: 36px;
+                padding: 6px;
+                box-sizing: border-box;
+                border-radius: 5px;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: rgba($color: #5468ff, $alpha: 0.1);
+                }
+            }
+        }
+
+
+
+        >.options {
+            width: 160px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 1px 1px 10px rgba($color: #888, $alpha: .3);
+            position: absolute;
+            right: 10px;
+            top: 60px;
+            z-index: 99999;
+            box-sizing: border-box;
+
+            .options-item {
+                width: 100%;
+                height: 40px;
+                padding-left: 10px;
+                box-sizing: border-box;
+                display: flex;
+                align-items: center;
+                cursor: pointer;
+
+
+
+                &:hover {
+                    background-color: rgba($color: #5468ff, $alpha: 0.1);
+                }
+
+                >img {
+                    width: 16px;
+                    height: 16px;
+                    margin-right: 6px;
+                }
+
+                >span {
+                    font-size: 14px;
+                    color: #555;
+                }
+            }
+        }
+    }
+}
+
+.child_input {
+    width: 100%;
+    height: 50px;
+    padding-left: 80px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    >.input-item {
+        height: 42px;
+        box-shadow: 0 3px 5px -4px rgb(0, 0, 0, .4) inset, -1px 0 3px -2px rgb(0, 0, 0, .1) inset;
+        border: 1px solid #d9d9d9 !important;
+    }
+    >span:nth-child(1) {
+        width: 80px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-size: 15px;
+        color: #333;
+    }
+}
