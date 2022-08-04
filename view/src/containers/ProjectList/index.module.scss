@@ -10,6 +10,23 @@
         height: 50px;
         display: flex;
         align-items: center;
+        >.parameter {
+            height: 32px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: flex-end;
+            margin-right: 20px;
+            >span:nth-child(1) {
+                font-size: 12px;
+                font-weight: 700;
+                color: #333;
+            }
+            >span:nth-child(2) {
+                margin-left: 4px;
+                font-size: 12px;
+                color: #1c18ff;
+            }
+        }
     }
 }
 
@@ -21,6 +38,7 @@
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+
     >span {
         width: 80px;
         height: 50px;

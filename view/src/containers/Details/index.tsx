@@ -162,13 +162,6 @@ const View: React.FC = (props: any) => {
     }, [])
 
 
-    useEffect(() => {
-        console.log('===');
-
-    }, [props.siteDetails.status])
-
-
-
 
     // 选择文件
     function fileSelectClick() {

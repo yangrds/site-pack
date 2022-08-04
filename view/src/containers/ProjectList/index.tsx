@@ -17,6 +17,7 @@ interface DataType {
     host?: string;
     history?: string;
     date?: string;
+    dateText?: string;
     status?: string;
     process?: any;
 }
@@ -73,8 +74,8 @@ const View: React.FC = (props: any) => {
         },
         {
             title: '创建时间',
-            dataIndex: 'date',
-            key: 'date',
+            dataIndex: 'dateText',
+            key: 'dateText',
             width: '160px',
         },
         {
@@ -117,30 +118,26 @@ const View: React.FC = (props: any) => {
                 </>
             ),
         },
-
     ];
 
 
-
-
-
+    // 创建站点弹框显示
     const [createModalVisible, setCreateModalVisible] = useState(false);
+    // 详情弹框显示
     const [detailsModalVisible, setDetailsModalVisible] = useState(false);
-
-
+    // 详情数据
     const [siteDetails, setSiteDetails] = useState<any>({});
+    // 当前管理界面（弹框）
     const [project_key, setProject_key] = useState<string>('');
 
-
-
-
+    // 创建站点数据录入
     const [project, setProject] = useState<DataType>({
-        name: '“正规”网站',
-        remark: '司搭街坊昆仑山搭街坊独立思考',
-        port: '8070',
+        name: '',
+        remark: '',
+        port: '',
     })
 
-
+    // 站点列表
     const [projects, setProjects] = useState<DataType[]>([]);
 
 
@@ -150,16 +147,19 @@ const View: React.FC = (props: any) => {
     }, [projects])
 
 
+    // 唤醒创建站点（弹框）
     const showModal = () => {
         setCreateModalVisible(true);
     };
 
 
+    // 关闭创建站点（弹框）
     const handleCancel = () => {
         setCreateModalVisible(false);
     };
 
 
+    // 显示站点管理页面（弹框）
     function detailsShow(details: DataType) {
         setSiteDetails(details)
         setProject_key(details.key)
@@ -167,6 +167,7 @@ const View: React.FC = (props: any) => {
     }
 
 
+    // 删除站点
     async function _project_remove(details: any) {
         confirm({
             title: '确定删除该站点？',
@@ -213,8 +214,7 @@ const View: React.FC = (props: any) => {
     }
 
 
-
-
+    // 信息提示互动
     function complete({ text, time = 800, err, callback }: Complete) {
         const time1 = setTimeout(() => {
             props.loading_status(err ? 'fail' : 'success')
@@ -279,17 +279,26 @@ const View: React.FC = (props: any) => {
     async function _project_list() {
         const res = await project_list()
         if (res.code === 200) {
-            const _projects = res.data.map((item: DataType) => {
-                item.date = dateFormat('YY-mm-dd HH:MM:SS', item.date as any)
-                return item
-            })
-            setProjects(_projects)
+            setProjects(res.data.sort((a, b) => b.date - a.date))
         }
     }
 
+    const [scrollHeight, setScrollHeight] = useState(document.body.clientHeight - 160)
+
     useEffect(() => {
+        window.addEventListener('resize', resize)
         _project_list()
+        return () => {
+            window.removeEventListener('resize', resize)
+        }
     }, [])
+
+
+
+
+    function resize() {
+        setScrollHeight(document.body.clientHeight - 160)
+    }
 
 
     return (
@@ -298,8 +307,21 @@ const View: React.FC = (props: any) => {
                 <Button onClick={showModal} style={{ marginRight: '10px' }} type="primary">添加站点</Button>
                 <Button onClick={_process_init} style={{ marginRight: '10px' }} >刷新进程池</Button>
                 <Button onClick={_process_kill_all} style={{ marginRight: '10px' }} >关闭进程池</Button>
+                <div style={{ marginLeft: '20px' }} className={style.parameter}>
+                    <span>进程数量</span>
+                    <span>{projects.length}</span>
+                </div>
+                <div className={style.parameter}>
+                    <span>运行中</span>
+                    <span>{projects.filter((item) => item.status === '1').length}</span>
+                </div>
+                <div className={style.parameter}>
+                    <span>已停止</span>
+                    <span>{projects.filter((item) => item.status === '0').length}</span>
+                </div>
+
             </div>
-            <Table size='small' columns={columns} dataSource={projects} />
+            <Table scroll={{ y: scrollHeight }} pagination={false} size='small' columns={columns} dataSource={projects} />
 
             <Modal zIndex={0} title="添加网站" okText='提交' cancelText='取消' visible={createModalVisible} onOk={submit} onCancel={handleCancel}>
                 <div className={style.child_input}>

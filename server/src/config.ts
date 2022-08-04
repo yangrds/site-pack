@@ -30,7 +30,7 @@ function keyInit() {
     /* 公钥文件是否存在 */
     const isPubkey = fs.existsSync(pubkey_path)
 
-    /* 公钥文件是否存在 */
+    /* 私钥文件是否存在 */
     const isPrikey = fs.existsSync(prikey_path)
 
     // 秘钥缺失，重新创建秘钥

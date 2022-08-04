@@ -291,6 +291,7 @@ export class ProjectService {
                     const before = await ServerStatus(process.env.port)
                     config.status = before.status ? '1' : '0'
                     config.process = process
+                    config.dateText = dateFormat('YY-mm-dd HH:MM:SS', config.date as any)
                 } else {
                     config.status = '0'
                 }
