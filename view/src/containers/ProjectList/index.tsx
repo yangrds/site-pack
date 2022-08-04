@@ -3,11 +3,12 @@ import { connect } from 'react-redux'
 import style from './index.module.scss';
 import { Table, Button, Modal, Input, Tag, Tooltip } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { process_init, process_kill, process_kill_all, process_start, project_create, project_list } from '../../http/api'
+import { process_init, process_kill, process_kill_all, process_start, project_create, project_list, project_remove } from '../../http/api'
 import { dateFormat, formatDuring, formatSeconds } from '../../utils';
 import { loading_status, loading_text, loading_visible } from '../../redux/actions/project'
 import Details from '../Details/index'
-
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+const { confirm } = Modal;
 interface DataType {
     name: string;
     remark: string;
@@ -74,7 +75,7 @@ const View: React.FC = (props: any) => {
             title: '创建时间',
             dataIndex: 'date',
             key: 'date',
-            width: '120px',
+            width: '160px',
         },
         {
             title: '访问地址',
@@ -106,12 +107,13 @@ const View: React.FC = (props: any) => {
             title: '操作',
             dataIndex: 'operate',
             key: 'operate',
-            width: '150px',
+            width: '200px',
             render: (_, details) => (
                 <>
                     {details.status === '0' ? <Button size="small" onClick={() => _process_start(details.key)} type="primary" >启动</Button>
                         : <Button size="small" onClick={() => _process_kill(details.key)} type="primary" danger>停止</Button>}
                     <Button onClick={() => detailsShow(details)} style={{ marginLeft: '10px' }} size="small">管理</Button>
+                    <Button onClick={() => _project_remove(details)} style={{ marginLeft: '10px' }} size="small">删除</Button>
                 </>
             ),
         },
@@ -165,6 +167,26 @@ const View: React.FC = (props: any) => {
     }
 
 
+    async function _project_remove(details: any) {
+        confirm({
+            title: '确定删除该站点？',
+            icon: <ExclamationCircleOutlined />,
+            content: `【${details.name}】删除后将无法恢复！`,
+            okText: '确定',
+            okType: 'danger',
+            cancelText: '取消',
+            async onOk() {
+                props.loading_visible(true)
+                const res = await project_remove({ id: details.key })
+                if (res.code === 200) {
+                    complete({ text: '删除成功', callback: _project_list })
+                } else {
+                    complete({ text: `${res.msg}`, err: true, time: 2000 })
+                }
+
+            }
+        });
+    }
 
     // 创建站点->提交数据
     async function submit() {
@@ -178,6 +200,8 @@ const View: React.FC = (props: any) => {
         if (res.code === 200) {
             setCreateModalVisible(false);
             complete({ text: '站点添加成功', callback: _project_list })
+        } else {
+            complete({ text: `${res.msg}`, err: true, time: 1200 })
         }
     }
 

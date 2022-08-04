@@ -7,6 +7,7 @@ import { get_process_container, init, process_container } from '../../plugin/sta
 import * as fs from 'fs-extra';
 import got from 'got';
 import { decrypt, encrypt } from 'src/utils/verify';
+import { JudgePort } from 'src/utils/port';
 
 // 心跳检查
 function ServerStatus(port: string): Promise<{ status: boolean, msg: string }> {
@@ -97,7 +98,21 @@ export class ProjectService {
 
 
     // 创建项目（站点）
-    create(body: { name: string; port: string; remark: string }) {
+    async create(body: { name: string; port: string; remark: string }) {
+
+        // 检测端口是否被系统占用
+        const isPort = await JudgePort(body.port)
+        if (!isPort.status) {
+            return { code: 500, msg: `端口${isPort.port}，已被占用！` }
+        }
+        // 检测端口是否被其他站点注册
+        const listRes: any = await this.list()
+        if (listRes.code != 200) return listRes
+        const isProjectPort = listRes.data.find((item: any) => item.port === body.port)
+        if (isProjectPort) {
+            return { code: 500, msg: `端口${isProjectPort.port}，已经被【${isProjectPort.name}】注册` }
+        }
+        // 站点主键
         const id = uuid(16, 32)
         // 初始数据
         const config = { ...body, date: Math.round(new Date() as any), key: id }
@@ -122,6 +137,16 @@ export class ProjectService {
         }
     }
 
+    async remove(body: { id: string }) {
+        try {
+            const key_path = path.join(PackConfig.static_resources, body.id)
+            fs.emptyDirSync(key_path)
+            fs.rmdirSync(key_path)
+            return { code: 200, msg: '删除成功' }
+        } catch (error) {
+            return { code: 500, msg: error.message }
+        }
+    }
 
     async process_killAll() {
         try {
@@ -256,8 +281,10 @@ export class ProjectService {
         try {
             // 遍历静态资源
             for (let i = 0; i < key_dirs.length; i++) {
+                const config_path = path.join(PackConfig.site_pack, 'static_resources', key_dirs[i], 'config.json')
+                if (!fs.existsSync(config_path)) continue;
                 // 读取静态资源基础配置
-                const config = fs.readJsonSync(path.join(PackConfig.site_pack, 'static_resources', key_dirs[i], 'config.json'))
+                const config = fs.readJsonSync(config_path)
                 // 根据静态资源key值，在进程池内寻找对应的进程。
                 const process = process_container.find((item) => item.project_id === config.key)
                 if (process) {

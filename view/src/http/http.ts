@@ -1,9 +1,9 @@
 /**
  * @description 网络请求框架封装
  */
+import { message } from 'antd'
 import Axios from 'axios'
 import QS from 'qs'
-
 Axios.defaults.baseURL = '/'
 
 // TODO 设置超时时间
@@ -87,3 +87,41 @@ export function post({ url, body = {}, params = {}, option, onUploadProgress }: 
     })
 }
 
+
+
+
+
+
+export function interceptors() {
+    // 设置统一拦截（REQ）
+    Axios.interceptors.request.use(
+        (config: any) => {
+            const token = localStorage.getItem("token");
+            if (token) {
+                config.headers.token = token;
+            }
+            return config;
+        },
+        (err: any) => {
+            return Promise.reject(err);
+        }
+    );
+
+
+    // 设置统一拦截（RES）
+    Axios.interceptors.response.use(
+        (response: any) => {
+            if (response.data.code === 304) {
+                // navigate('/login', { replace: true })
+                window.location.href = '/#/login'
+            }
+            if (response.data.code != 200) {
+                message.error(response.data.msg);
+            }
+            return response;
+        },
+        (error: any) => {
+            return Promise.reject(error);
+        }
+    );
+}

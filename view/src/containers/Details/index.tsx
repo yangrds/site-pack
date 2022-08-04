@@ -133,9 +133,6 @@ const View: React.FC = (props: any) => {
                 }
 
             },
-            onCancel() {
-                console.log('Cancel');
-            },
         });
 
     }

@@ -186,7 +186,7 @@ export function FileRemove(Path: string) {
     })
 }
 
-/* 文件删除 */
+/* 文件解压 */
 export function decompress(buffer: Buffer, toPath: string) {
     return new Promise((resolve) => {
         // 解压静态资源

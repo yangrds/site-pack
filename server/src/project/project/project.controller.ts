@@ -63,6 +63,13 @@ export class ProjectController {
         return this.projectService.Login(body)
     }
 
+    @Post('remove')
+    remove(@Body() body: {id: string; }) {
+        return this.projectService.remove(body)
+    }
+
+    
+
 
     @Post('user-update')
     async UserUpdate(@Req() req: Request, @Body() body: { account: string; password: string; name: string; token: string }) {

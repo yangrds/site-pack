@@ -14,9 +14,11 @@ export const history_list = (body?: any): any => post({ url: `${address}/project
 export const history_remove = (body?: any): any => post({ url: `${address}/project/history-remove`, body })
 export const injection = (body?: any): any => post({ url: `${address}/project/injection`, body })
 export const login = (body?: any): any => post({ url: `${address}/project/login`, body })
+export const project_remove = (body?: any): any => post({ url: `${address}/project/remove`, body })
 export const UserInfo = (body?: any): any => post({ url: `${address}/project/user-info`, body })
 export const UserUpdate = (body?: any): any => post({ url: `${address}/project/user-update`, body })
-
-
-
 export const FileUpload = (body?: any, onUploadProgress?: any): any => post({ url: `${address}/project/upload`, body, onUploadProgress })
+
+
+
+
