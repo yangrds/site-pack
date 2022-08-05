@@ -1,5 +1,6 @@
 export interface ServeParameter {
     name: string;
+    isPort?:string,
     port: number;
     dist: string;
     project: string;

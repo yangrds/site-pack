@@ -2,7 +2,7 @@ const Koa = require("koa");
 const static = require("koa-static");
 const { historyApiFallback } = require('koa2-connect-history-api-fallback')
 const app = new Koa();
-const { port, name, dist, project } = process.env;
+const { port, name, dist, project, isPort } = process.env;
 
 app.use(historyApiFallback())
 
@@ -19,7 +19,10 @@ app.on("close", () => {
 });
 
 
-app.listen(port, "0.0.0.0", (err) => {
-  process.send({ type: "listen", msg: "启动成功" });
-});
+if (isPort === '1') {
+  app.listen(port, "0.0.0.0", (err) => {
+    process.send({ type: "listen", msg: "启动成功" });
+  });
+}
+
 

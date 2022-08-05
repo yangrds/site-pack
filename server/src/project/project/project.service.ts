@@ -8,25 +8,8 @@ import * as fs from 'fs-extra';
 import got from 'got';
 import { decrypt, encrypt } from 'src/utils/verify';
 import { JudgePort } from 'src/utils/port';
+import { Heartbeat } from 'src/plugin/ServerHeartbeat';
 
-// 心跳检查
-function ServerStatus(port: string): Promise<{ status: boolean, msg: string }> {
-    return new Promise(async (resolove) => {
-        try {
-            await got.post(`http://0.0.0.0:${port}/status`, {
-                json: {},
-                timeout: {
-                    lookup: 100,
-                    connect: 3000
-                }
-            }).json();
-            resolove({ status: true, msg: '' })
-        } catch (error) {
-            resolove({ status: false, msg: error.message })
-        }
-    })
-
-}
 
 
 
@@ -93,10 +76,6 @@ export class ProjectService {
         }
     }
 
-
-
-
-
     // 创建项目（站点）
     async create(body: { name: string; port: string; remark: string }) {
 
@@ -153,7 +132,7 @@ export class ProjectService {
             for (let i = 0; i < process_container.length; i++) {
                 const process = process_container[i]
                 // 关闭进程之前先检测心跳状态
-                const before = await ServerStatus(process.env.port)
+                const before = await Heartbeat(process.env.port)
                 if (before.status) {
                     // 关闭进程
                     process.kill()
@@ -176,19 +155,18 @@ export class ProjectService {
         }
     }
 
-
     async process_kill(body: { id: string }) {
         // 根据进程ID从进程池找出当前操作的进程
         const child = process_container.find((item) => item.project_id === body.id)
         if (!child) return { code: 500, msg: '未知错误，请重试或者联系管理员。' }
         // 关闭进程之前先检测心跳状态
-        const before = await ServerStatus(child.env.port)
+        const before = await Heartbeat(child.env.port)
         // 心跳正常关闭进程，心跳异常将错误抛给前端
         if (before.status) {
             // 关闭进程
             child.kill()
             // 关闭进程之后在次检测心跳状态
-            const after = await ServerStatus(child.env.port)
+            const after = await Heartbeat(child.env.port)
             if (after.status) {
                 return { code: 500, msg: `端口【${child.env.port}】关闭失败，请检查服务器配置` }
             } else {
@@ -202,8 +180,9 @@ export class ProjectService {
     async process_start(body: { id: string }) {
         const process = process_container.find((item) => item.project_id === body.id)
         if (!process) return { code: 500, msg: '进程池匹配失败，请刷新进程池后操作。' }
+
         // 启动进程之前先检测心跳状态
-        const before = await ServerStatus(process.env.port)
+        const before = await Heartbeat(process.env.port)
         /* 
           心跳正常不需要启动进程，向前端抛错误警告。
           心跳异常说明进程没启动，将启动进程。
@@ -211,9 +190,14 @@ export class ProjectService {
         if (before.status) {
             return { code: 500, msg: `端口【${process.env.port}】运行正常，请勿重复启动！` }
         } else {
-            await process.init()
+            // 检测端口是否被系统占用
+            const isPort = await JudgePort(process.env.port)
+            if (!isPort.status) {
+                return { code: 500, msg: `端口${isPort.port}，已被占用！` }
+            }
+            await process.init({ isPort: '1' })
             // 启动进程之后在次检测心跳状态
-            const after = await ServerStatus(process.env.port)
+            const after = await Heartbeat(process.env.port)
             if (after.status) {
                 return { code: 200, msg: `端口【${process.env.port}】启动成功` }
             } else {
@@ -288,7 +272,7 @@ export class ProjectService {
                 // 根据静态资源key值，在进程池内寻找对应的进程。
                 const process = process_container.find((item) => item.project_id === config.key)
                 if (process) {
-                    const before = await ServerStatus(process.env.port)
+                    const before = await Heartbeat(process.env.port)
                     config.status = before.status ? '1' : '0'
                     config.process = process
                     config.dateText = dateFormat('YY-mm-dd HH:MM:SS', config.date as any)
