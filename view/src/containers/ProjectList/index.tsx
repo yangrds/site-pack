@@ -338,8 +338,6 @@ const View: React.FC = (props: any) => {
                 </div>
             </Modal>
 
-
-
             <Modal destroyOnClose={true} width="800px" footer={null} title="网站管理" visible={detailsModalVisible} onCancel={() => setDetailsModalVisible(false)}>
                 <Details process_kill={_process_kill} process_start={_process_start} siteDetails={siteDetails} />
             </Modal>
