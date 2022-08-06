@@ -1,4 +1,3 @@
-import http from 'http';
 import * as path from 'path';
 import { ChildProcess, fork } from 'child_process';
 import { ServeParameter } from '../interface';
@@ -11,23 +10,24 @@ class ServeAdmin {
   project_id: string;
   env: any = {};
   status: string;
-  constructor(serveParameter: ServeParameter) {
+  constructor() {}
+
+  async refresh(serveParameter: ServeParameter) {
     this.env.port = serveParameter.port;
     this.env.isPort = serveParameter.isPort;
     this.env.dist = serveParameter.dist;
     this.env.name = serveParameter.name;
-    this.env.id = serveParameter.id;
-    this.env.ssx = true;
+    this.env.id = serveParameter.project_id;
     this.project_id = serveParameter.project_id
-    this.id = serveParameter.id;
+    this.id = serveParameter.project_id;
     this.env.project = serveParameter.project;
-    this.init();
+    await this.init();
   }
-  init(parameter?: { isPort?: string }) {
-    const _this = this
 
+  async init(parameter?: { isPort?: string }) {
+    const _this = this
     // 端口占用检测
-    if(parameter && parameter.isPort){
+    if (parameter && parameter.isPort) {
       _this.env.isPort = parameter.isPort
     }
     /* 
@@ -41,6 +41,7 @@ class ServeAdmin {
       // 监听子进程关闭
       _this.child.on('exit', () => {
         _this.exit(_this.env);
+        resolove(true)
       });
       // 监听子进程消息
       _this.child.on('message', (data) => {
@@ -53,7 +54,6 @@ class ServeAdmin {
   kill() {
     this.child.kill();
   }
-
   message(data: { type: string; msg: string }) {
     switch (data.type) {
       case 'close':
@@ -66,12 +66,12 @@ class ServeAdmin {
   }
 
   public listen(env: any): void {
-    console.log('\x1B[33m%s\x1B[33m', `进程：网站【${this.env.project}】Id:【${this.env.id}】${this.env.port}端口运行正常`);
+    console.log('\x1B[33m%s\x1B[33m', `进程：网站【${this.env.project}】${this.env.port}端口已开启`);
     this.status = 'open';
   }
 
   public exit(env: any): void {
-    console.log('\x1B[31m%s\x1B[31m', `进程：网站【${this.env.project}】Id:【${this.env.id}】${this.env.port}端口已停止；`)
+    console.log('\x1B[31m%s\x1B[31m', `进程：网站【${this.env.project}】${this.env.port}端口已停止`)
     this.status = 'exit';
   }
 }

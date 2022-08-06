@@ -55,7 +55,6 @@ export default connect(
             loading: state.project.loading,
             loadingText: state.project.loadingText,
             loadingStatus: state.project.loadingStatus,
-
         }
     ),
     {

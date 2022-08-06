@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import * as path from 'path';
-import { CloudFileMove, dateFormat, decompress, FileRemove, uuid } from '../../utils/index'
-import { CloudFileInfo } from '../../utils'
-import PackConfig from '../../config'
-import { get_process_container, init, process_container } from '../../plugin/start'
+import { CloudFileMove, dateFormat, decompress, FileRemove, uuid } from '../utils/index'
+import { CloudFileInfo } from '../utils'
+import PackConfig from '../config'
+import { get_process_container, init, process_container } from '../plugin/start'
 import * as fs from 'fs-extra';
 import got from 'got';
 import { decrypt, encrypt } from 'src/utils/verify';
@@ -81,6 +81,8 @@ export class ProjectService {
 
         // 检测端口是否被系统占用
         const isPort = await JudgePort(body.port)
+        console.log(isPort);
+
         if (!isPort.status) {
             return { code: 500, msg: `端口${isPort.port}，已被占用！` }
         }
@@ -121,6 +123,9 @@ export class ProjectService {
             const key_path = path.join(PackConfig.static_resources, body.id)
             fs.emptyDirSync(key_path)
             fs.rmdirSync(key_path)
+            fs.rmdirSync(path.join(PackConfig.history_file, body.id))
+            const result = await this.process_kill(body)
+            if (result.code != 200) return result
             return { code: 200, msg: '删除成功' }
         } catch (error) {
             return { code: 500, msg: error.message }
@@ -148,7 +153,7 @@ export class ProjectService {
     async process_init() {
         const res = await this.process_killAll()
         if (res.code === 200) {
-            init()
+            await init()
             return { code: 200, msg: '进程池刷新完毕' }
         } else {
             return res

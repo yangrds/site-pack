@@ -201,6 +201,7 @@ const View: React.FC = (props: any) => {
         if (res.code === 200) {
             setCreateModalVisible(false);
             complete({ text: '站点添加成功', callback: _project_list })
+            // _process_init()
         } else {
             complete({ text: `${res.msg}`, err: true, time: 1200 })
         }
@@ -246,7 +247,7 @@ const View: React.FC = (props: any) => {
         props.loading_visible(true)
         const res = await process_init()
         if (res.code === 200) {
-            complete({ text: '进程池重启成功', callback: _project_list })
+            complete({ text: '进程池重启完毕', callback: _project_list })
         } else {
             complete({ text: `${res.msg}`, err: true, time: 2000 })
         }
@@ -257,7 +258,7 @@ const View: React.FC = (props: any) => {
         props.loading_visible(true)
         const res = await process_kill_all()
         if (res.code === 200) {
-            complete({ text: '进程池冻结成功', callback: _project_list })
+            complete({ text: '进程池冻结完毕', callback: _project_list })
         } else {
             complete({ text: `${res.msg}`, err: true, time: 2000 })
         }

@@ -112,8 +112,7 @@ export function interceptors() {
     Axios.interceptors.response.use(
         (response: any) => {
             if (response.data.code === 304) {
-                // navigate('/login', { replace: true })
-                window.location.href = '/#/login'
+                window.location.href = '/login'
             }
             if (response.data.code != 200) {
                 message.error(response.data.msg);

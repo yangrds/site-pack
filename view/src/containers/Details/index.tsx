@@ -18,6 +18,7 @@ interface DataType {
     host?: string;
     history?: string;
     date?: string;
+    dateText?: string;
     status?: string;
     process?: any;
 }
@@ -205,7 +206,7 @@ const View: React.FC = (props: any) => {
                 <Descriptions.Item label="状态" span={2}>
                     <Badge status={details.status === '1' ? 'warning' : 'error'} text={details.status === '1' ? '运行中' : '已关闭'} />
                 </Descriptions.Item>
-                <Descriptions.Item label="创建时间" >{details.date}</Descriptions.Item>
+                <Descriptions.Item label="创建时间" >{details.dateText}</Descriptions.Item>
                 <Descriptions.Item label="访问地址" span={2}>
                     <a target="_blank" href={`http://${window.location.hostname}:` + details.port}>{window.location.hostname + ':' + details.port}</a>
                 </Descriptions.Item>
