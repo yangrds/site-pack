@@ -123,6 +123,7 @@ export class ProjectService {
             const key_path = path.join(PackConfig.static_resources, body.id)
             fs.emptyDirSync(key_path)
             fs.rmdirSync(key_path)
+            fs.emptyDirSync(path.join(PackConfig.history_file, body.id))
             fs.rmdirSync(path.join(PackConfig.history_file, body.id))
             const result = await this.process_kill(body)
             if (result.code != 200) return result

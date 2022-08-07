@@ -144,6 +144,7 @@ const View: React.FC = (props: any) => {
     useEffect(() => {
         const details = projects.find((item) => item.key === project_key)
         details && setSiteDetails(details)
+        setScrollHeight(document.body.clientHeight - 160)
     }, [projects])
 
 
@@ -286,6 +287,8 @@ const View: React.FC = (props: any) => {
 
     const [scrollHeight, setScrollHeight] = useState(document.body.clientHeight - 160)
 
+
+
     useEffect(() => {
         window.addEventListener('resize', resize)
         _project_list()
@@ -293,9 +296,6 @@ const View: React.FC = (props: any) => {
             window.removeEventListener('resize', resize)
         }
     }, [])
-
-
-
 
     function resize() {
         setScrollHeight(document.body.clientHeight - 160)
