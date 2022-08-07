@@ -1,7 +1,5 @@
 # SITE-PACK一款小巧的HTTP静态资源托管工具
 
-## SITE-PACK
-
 SIT-PACK是一款完全由JavaScript语言编写的HTTP静态资源托管工具，以多进程的方式对静态资源进行集中式管理。工具可编译为MacOS/Windows/Linux三个平台可执行程序，双击启动程序即可，不需要任何复杂的配置！
 
 GitHub开源地址：[https://github.com/yangrds/site-pack](https://github.com/yangrds/site-pack "https://github.com/yangrds/site-pack")
